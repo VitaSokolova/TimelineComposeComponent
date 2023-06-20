@@ -33,6 +33,7 @@ import vita.sokolova.timeline.ui.timeline.TimelineNodePosition
 
 class SampleActivity : ComponentActivity() {
 
+    //Replace with more interesting example: like cooking recipe
     private val timelineStages = arrayOf(
         Stage(
             "Book a Alice's Adventures in Wonderland (commonly Alice in Wonderland) is an 1865 English children's novel by Lewis Carroll, a mathematics don at Oxford University. It details the story of a young girl named Alice who falls through a rabbit hole into a fantasy world of anthropomorphic creatures.",
@@ -53,12 +54,18 @@ class SampleActivity : ComponentActivity() {
         Stage(
             "It is credited as helping end an era of didacticism in children's literature", true
         ),
-        Stage("Inaugurating an era in which writing for children aimed to \"delight or entertain\"", true),
+        Stage(
+            "Inaugurating an era in which writing for children aimed to \"delight or entertain\"",
+            true
+        ),
         Stage(
             "The tale plays with logic, giving the story lasting popularity with adults as well as with children.",
             false
         ),
-        Stage("The titular character Alice shares her name with Alice Liddell, a girl Carroll knew.", false),
+        Stage(
+            "The titular character Alice shares her name with Alice Liddell, a girl Carroll knew.",
+            false
+        ),
         Stage(
             "The book has never been out of print and has been translated into 174 languages.", true
         ),
@@ -77,27 +84,27 @@ class SampleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TimelineComposeComponentTheme {
-                SampleScreenContent()
+                SampleScreenContent(timelineStages)
             }
-        }
-    }
-
-    @Composable
-    fun SampleScreenContent() {
-        // A surface container using the 'background' color from the theme
-        Surface(
-            modifier = Modifier
-                .fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            LazyTimeline(timelineStages)
         }
     }
 }
 
-class Stage(
+data class Stage(
     val description: String, val finished: Boolean
 )
+
+@Composable
+fun SampleScreenContent(timelineStages: Array<Stage>) {
+    // A surface container using the 'background' color from the theme
+    Surface(
+        modifier = Modifier
+            .fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        LazyTimeline(timelineStages)
+    }
+}
 
 @Composable
 fun LazyTimeline(stages: Array<Stage>) {
@@ -144,12 +151,22 @@ private fun getIconColor(stage: Stage) = if (stage.finished) {
     Orange500
 }
 
-private fun getIconStrokeColor(stage: Stage): StrokeParameters? =
-    StrokeParameters(color = Green700, width = 2.dp).takeIf { stage.finished }
+private fun getIconStrokeColor(stage: Stage): StrokeParameters? {
+    return if (stage.finished) {
+        StrokeParameters(color = Green700, width = 2.dp)
+    } else {
+        null
+    }
+}
 
 @Composable
-private fun getIcon(message: Stage): Painter? =
-    painterResource(R.drawable.ic_bubble_warning_16).takeIf { !message.finished }
+private fun getIcon(stage: Stage): Int? {
+    return if (stage.finished) {
+        R.drawable.ic_bubble_warning_16
+    } else {
+        null
+    }
+}
 
 
 private fun mapToTimelineNodePosition(index: Int, collectionSize: Int) = when (index) {

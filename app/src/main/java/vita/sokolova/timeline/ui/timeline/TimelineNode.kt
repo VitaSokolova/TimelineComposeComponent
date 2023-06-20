@@ -1,5 +1,6 @@
 package vita.sokolova.timeline.ui.timeline
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -28,13 +29,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import vita.sokolova.timeline.R
 import vita.sokolova.timeline.ui.theme.Coral
-import vita.sokolova.timeline.ui.theme.DarkCoral
 import vita.sokolova.timeline.ui.theme.LightBlue
 import vita.sokolova.timeline.ui.theme.LightCoral
 import vita.sokolova.timeline.ui.theme.Purple
-import vita.sokolova.timeline.ui.theme.PurpleGrey40
 import vita.sokolova.timeline.ui.theme.TimelineComposeComponentTheme
-import vita.sokolova.timeline.ui.theme.White
 
 @Composable
 fun TimelineNode(
@@ -45,6 +43,7 @@ fun TimelineNode(
     spacer: Dp,
     content: @Composable BoxScope.(modifier: Modifier) -> Unit
 ) {
+    val iconPainter = circleParameters.icon?.let { painterResource(id = it) }
     Box(
         modifier = Modifier
             .wrapContentSize()
@@ -69,23 +68,23 @@ fun TimelineNode(
                 circleParameters.stroke?.let { stroke ->
                     val strokeWidthInPx = stroke.width.toPx()
                     drawCircle(
-                        stroke.color,
-                        circleRadiusInPx - strokeWidthInPx / 2,
+                        color = stroke.color,
+                        radius = circleRadiusInPx - strokeWidthInPx / 2,
                         center = Offset(circleRadiusInPx, circleRadiusInPx),
                         style = Stroke(width = strokeWidthInPx)
                     )
                 }
 
-                circleParameters.icon?.let { painter ->
+                iconPainter?.let { painter ->
                     this.withTransform({
                         translate(
-                            circleRadiusInPx - painter.intrinsicSize.width / 2f,
-                            circleRadiusInPx - painter.intrinsicSize.height / 2f
+                            left = circleRadiusInPx - painter.intrinsicSize.width / 2f,
+                            top = circleRadiusInPx - painter.intrinsicSize.height / 2f
                         )
                     }, {
                         this.drawIntoCanvas {
                             with(painter) {
-                                draw(painter.intrinsicSize)
+                                draw(intrinsicSize)
                             }
                         }
                     })
@@ -143,7 +142,7 @@ fun TimelinePreview() {
                 circleParameters = CircleParametersDefaults.circleParameters(
                     backgroundColor = LightCoral,
                     stroke = StrokeParameters(color = Coral, width = 2.dp),
-                    icon = painterResource(R.drawable.ic_bubble_warning_16)
+                    icon = R.drawable.ic_bubble_warning_16
                 ),
                 lineParameters = LineParametersDefaults.linearGradient(
                     startColor = Coral,
@@ -164,7 +163,8 @@ object CircleParametersDefaults {
         radius: Dp = defaultCircleRadius,
         backgroundColor: Color = Cyan,
         stroke: StrokeParameters? = null,
-        icon: Painter? = null
+        @DrawableRes
+        icon: Int? = null
     ) = CircleParameters(
         radius,
         backgroundColor,
