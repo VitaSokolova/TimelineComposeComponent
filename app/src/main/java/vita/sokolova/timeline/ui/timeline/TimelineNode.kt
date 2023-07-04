@@ -38,7 +38,7 @@ import vita.sokolova.timeline.ui.theme.TimelineComposeComponentTheme
 fun TimelineNode(
     position: TimelineNodePosition,
     circleParameters: CircleParameters,
-    lineParameters: LineParameters,
+    lineParameters: LineParameters? = null,
     contentStartOffset: Dp,
     spacer: Dp,
     content: @Composable BoxScope.(modifier: Modifier) -> Unit
@@ -50,7 +50,7 @@ fun TimelineNode(
             .drawBehind {
                 val circleRadiusInPx = circleParameters.radius.toPx()
 
-                if (position != TimelineNodePosition.LAST) {
+                if (position != TimelineNodePosition.LAST && lineParameters != null) {
                     drawLine(
                         brush = lineParameters.brush,
                         start = Offset(circleRadiusInPx, circleRadiusInPx * 2),
@@ -143,10 +143,6 @@ fun TimelinePreview() {
                     backgroundColor = LightCoral,
                     stroke = StrokeParameters(color = Coral, width = 2.dp),
                     icon = R.drawable.ic_bubble_warning_16
-                ),
-                lineParameters = LineParametersDefaults.linearGradient(
-                    startColor = Coral,
-                    endColor = Coral
                 ),
                 contentStartOffset = 16.dp,
                 spacer = 32.dp
