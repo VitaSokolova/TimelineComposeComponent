@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.domain
+package vita.sokolova.timeline.domain.entities
 
 sealed class MessageSender(open val message: String) {
 

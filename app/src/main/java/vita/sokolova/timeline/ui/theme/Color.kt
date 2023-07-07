@@ -19,7 +19,6 @@ val Green700: Color = Color(0xFF208C6E)
 
 val Gray200: Color = Color(0xFFEEEBF4)
 
-
 val LightBlue: Color = Color(0xff12c2e9)
 val Purple: Color = Color(0xffc471ed)
 val Coral: Color = Color(0xfff64f59)

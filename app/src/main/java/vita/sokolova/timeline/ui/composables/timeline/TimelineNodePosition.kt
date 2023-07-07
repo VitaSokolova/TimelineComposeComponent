@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.ui.timeline
+package vita.sokolova.timeline.ui.composables.timeline
 
 enum class TimelineNodePosition {
     FIRST,

@@ -1,11 +1,11 @@
-package vita.sokolova.timeline
+package vita.sokolova.timeline.ui
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import vita.sokolova.timeline.domain.HiringStage
-import vita.sokolova.timeline.domain.HiringStageStatus
-import vita.sokolova.timeline.domain.MessageSender
+import vita.sokolova.timeline.domain.entities.HiringStage
+import vita.sokolova.timeline.domain.entities.HiringStageStatus
+import vita.sokolova.timeline.domain.entities.MessageSender
 import java.time.LocalDate
 
 class SampleViewModel : ViewModel() {
@@ -14,8 +14,8 @@ class SampleViewModel : ViewModel() {
         TEST_DATA
     )
 
-    companion object{
-        val TEST_DATA =  arrayOf(
+    companion object {
+        val TEST_DATA = arrayOf(
             HiringStage(
                 date = LocalDate.now(),
                 initiator = MessageSender.Candidate(
@@ -28,7 +28,7 @@ class SampleViewModel : ViewModel() {
                 date = LocalDate.now(),
                 initiator = MessageSender.HR(
                     "JD",
-                    "Hi! Let's have a short call to discuss your expectations and experience"
+                    "Hi! Let's have a short call to discuss your expectations and experience."
                 ),
                 status = HiringStageStatus.FINISHED
             ),
@@ -39,22 +39,22 @@ class SampleViewModel : ViewModel() {
             ),
             HiringStage(
                 date = LocalDate.now().plusDays(1),
-                initiator = MessageSender.System("We are waiting for your test task. In should be completed at least one day before the technical interview. Only 1 day left."),
+                initiator = MessageSender.System("We are waiting for your test task. It should be completed at least one day before the technical interview."),
                 status = HiringStageStatus.CURRENT
             ),
             HiringStage(
                 date = LocalDate.now().plusDays(7),
-                initiator = MessageSender.System("Technical interview is scheduled"),
+                initiator = MessageSender.System("Technical interview."),
                 status = HiringStageStatus.UPCOMING
             ),
             HiringStage(
                 date = null,
-                initiator = MessageSender.System("Bar raiser interview"),
+                initiator = MessageSender.System("Bar raiser interview with the team."),
                 status = HiringStageStatus.UPCOMING
             ),
             HiringStage(
                 date = null,
-                initiator = MessageSender.System("Offer"),
+                initiator = MessageSender.System("Offer proposal."),
                 status = HiringStageStatus.UPCOMING
             )
         )
