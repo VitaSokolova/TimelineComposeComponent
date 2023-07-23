@@ -1,7 +1,6 @@
-package vita.sokolova.timeline.ui.composables.timeline
+package vita.sokolova.timeline.models
 
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
 data class LineParameters(

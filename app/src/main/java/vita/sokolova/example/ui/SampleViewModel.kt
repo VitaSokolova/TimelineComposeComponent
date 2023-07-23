@@ -1,11 +1,11 @@
-package vita.sokolova.timeline.ui
+package vita.sokolova.example.ui
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import vita.sokolova.timeline.domain.entities.HiringStage
-import vita.sokolova.timeline.domain.entities.HiringStageStatus
-import vita.sokolova.timeline.domain.entities.MessageSender
+import vita.sokolova.example.domain.entities.HiringStage
+import vita.sokolova.example.domain.entities.HiringStageStatus
+import vita.sokolova.example.domain.entities.MessageSender
 import java.time.LocalDate
 
 class SampleViewModel : ViewModel() {

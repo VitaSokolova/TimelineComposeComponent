@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.ui.composables.timeline
+package vita.sokolova.timeline.models
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color

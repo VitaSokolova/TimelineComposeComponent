@@ -13,7 +13,7 @@
         android:theme="@style/Theme.TimelineComposeComponent"
         tools:targetApi="31">
         <activity
-            android:name=".ui.SampleActivity"
+            android:name="vita.sokolova.example.ui.SampleActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.TimelineComposeComponent">

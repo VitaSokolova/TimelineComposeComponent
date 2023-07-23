@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.ui.composables
+package vita.sokolova.example.ui.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,10 +16,10 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import vita.sokolova.timeline.domain.entities.HiringStage
-import vita.sokolova.timeline.domain.entities.HiringStageStatus
-import vita.sokolova.timeline.domain.entities.MessageSender
-import vita.sokolova.timeline.ui.theme.TimelineComposeComponentTheme
+import vita.sokolova.example.domain.entities.HiringStage
+import vita.sokolova.example.domain.entities.HiringStageStatus
+import vita.sokolova.example.domain.entities.MessageSender
+import vita.sokolova.example.ui.theme.TimelineComposeComponentTheme
 import java.time.LocalDate
 
 @Composable
@@ -106,12 +106,12 @@ private fun MessagePreview() {
     TimelineComposeComponentTheme {
         Message(
             hiringStage = HiringStage(
-                LocalDate.now(),
-                MessageSender.Candidate(
+                date = LocalDate.now(),
+                initiator = MessageSender.Candidate(
                     initials = "JD",
                     message = "Hi! I will be glad to join DreamCompany team. I've sent you my CV."
                 ),
-                HiringStageStatus.CURRENT
+                status = HiringStageStatus.CURRENT
             ),
             modifier = Modifier
         )
@@ -124,12 +124,12 @@ private fun UpcomingStageMessagePreview() {
     TimelineComposeComponentTheme {
         Message(
             hiringStage = HiringStage(
-                LocalDate.now(),
-                MessageSender.Candidate(
+                date = LocalDate.now(),
+                initiator = MessageSender.Candidate(
                     initials = "JD",
                     message = "Coming soon"
                 ),
-                HiringStageStatus.UPCOMING
+                status = HiringStageStatus.UPCOMING
             ),
             modifier = Modifier
         )
@@ -141,15 +141,15 @@ private fun UpcomingStageMessagePreview() {
 private fun FinishedMessagePreview() {
     TimelineComposeComponentTheme {
         Message(
+            modifier = Modifier,
             hiringStage = HiringStage(
-                LocalDate.now(),
-                MessageSender.Candidate(
+                date = LocalDate.now(),
+                initiator = MessageSender.Candidate(
                     initials = "JD",
                     message = "Hi! I will be glad to join DreamCompany team. I've sent you my CV."
                 ),
-                HiringStageStatus.FINISHED
-            ),
-            modifier = Modifier
+                status = HiringStageStatus.FINISHED
+            )
         )
     }
 }

@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.ui.composables
+package vita.sokolova.example.ui.composables
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,21 +7,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import vita.sokolova.timeline.R
-import vita.sokolova.timeline.domain.entities.HiringStage
-import vita.sokolova.timeline.domain.entities.HiringStageStatus
-import vita.sokolova.timeline.ui.theme.Gray200
-import vita.sokolova.timeline.ui.theme.Green500
-import vita.sokolova.timeline.ui.theme.Orange500
-import vita.sokolova.timeline.ui.composables.timeline.CircleParameters
-import vita.sokolova.timeline.ui.composables.timeline.LineParameters
-import vita.sokolova.timeline.ui.composables.timeline.StrokeParameters
-import vita.sokolova.timeline.ui.composables.timeline.TimelineNode
-import vita.sokolova.timeline.ui.composables.timeline.TimelineNodePosition
+import vita.sokolova.example.domain.entities.HiringStage
+import vita.sokolova.example.domain.entities.HiringStageStatus
+import vita.sokolova.example.ui.theme.Gray200
+import vita.sokolova.example.ui.theme.Green500
+import vita.sokolova.example.ui.theme.Orange500
+import vita.sokolova.timeline.models.LineParameters
+import vita.sokolova.timeline.models.StrokeParameters
+import vita.sokolova.timeline.TimelineNode
+import vita.sokolova.timeline.defaults.CircleParametersDefaults
+import vita.sokolova.timeline.defaults.LineParametersDefaults
+import vita.sokolova.timeline.models.TimelineNodePosition
 
 @Composable
 fun LazyTimeline(stages: Array<HiringStage>) {
@@ -31,23 +32,18 @@ fun LazyTimeline(stages: Array<HiringStage>) {
             .fillMaxWidth(),
         content = {
             itemsIndexed(stages) { index, hiringStage ->
-                val position: TimelineNodePosition = mapToTimelineNodePosition(index, stages.size)
                 TimelineNode(
-                    position = position,
-                    circleParameters = CircleParameters(
-                        radius = 12.dp,
+                    position = mapToTimelineNodePosition(index, stages.size),
+                    circleParameters = CircleParametersDefaults.circleParameters(
                         backgroundColor = getIconColor(hiringStage),
                         stroke = getIconStrokeColor(hiringStage),
                         icon = getIcon(hiringStage)
                     ),
                     lineParameters = getLineBrush(
-                        with(LocalDensity.current) { 12.dp.toPx() }, index, stages
-                    )?.let {
-                        LineParameters(
-                            strokeWidth = 3.dp,
-                            brush = it
-                        )
-                    },
+                        circleRadius = 12.dp,
+                        index = index,
+                        items = stages
+                    ),
                     contentStartOffset = 16.dp,
                     spacer = 24.dp
                 ) { modifier ->
@@ -60,21 +56,20 @@ fun LazyTimeline(stages: Array<HiringStage>) {
 }
 
 @Composable
-private fun getLineBrush(circleRadiusInPx: Float, index: Int, items: Array<HiringStage>): Brush? {
+private fun getLineBrush(circleRadius: Dp, index: Int, items: Array<HiringStage>): LineParameters? {
     return if (index != items.lastIndex) {
         val currentStage: HiringStage = items[index]
         val nextStage: HiringStage = items[index + 1]
-        Brush.verticalGradient(
-            colors = listOf(
-                (getIconStrokeColor(currentStage)?.color ?: getIconColor(currentStage)),
-                (getIconStrokeColor(nextStage)?.color ?: getIconColor(items[index + 1]))
-            ),
+        val circleRadiusInPx = with(LocalDensity.current) { circleRadius.toPx() }
+        LineParametersDefaults.linearGradient(
+            strokeWidth = 3.dp,
+            startColor = (getIconStrokeColor(currentStage)?.color ?: getIconColor(currentStage)),
+            endColor = (getIconStrokeColor(nextStage)?.color ?: getIconColor(items[index + 1])),
             startY = circleRadiusInPx * 2
         )
     } else {
         null
     }
-
 }
 
 private fun getIconColor(stage: HiringStage): Color {

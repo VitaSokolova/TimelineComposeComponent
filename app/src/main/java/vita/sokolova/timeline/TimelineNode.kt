@@ -1,11 +1,10 @@
-package vita.sokolova.timeline.ui.composables.timeline
+package vita.sokolova.timeline
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -16,31 +15,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Cyan
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import vita.sokolova.timeline.R
-import vita.sokolova.timeline.ui.theme.Coral
-import vita.sokolova.timeline.ui.theme.LightBlue
-import vita.sokolova.timeline.ui.theme.LightCoral
-import vita.sokolova.timeline.ui.theme.Purple
-import vita.sokolova.timeline.ui.theme.TimelineComposeComponentTheme
+import vita.sokolova.timeline.defaults.CircleParametersDefaults
+import vita.sokolova.timeline.defaults.LineParametersDefaults
+import vita.sokolova.timeline.models.CircleParameters
+import vita.sokolova.timeline.models.LineParameters
+import vita.sokolova.timeline.models.StrokeParameters
+import vita.sokolova.timeline.models.TimelineNodePosition
+import vita.sokolova.example.ui.theme.Coral
+import vita.sokolova.example.ui.theme.LightBlue
+import vita.sokolova.example.ui.theme.LightCoral
+import vita.sokolova.example.ui.theme.Purple
+import vita.sokolova.example.ui.theme.TimelineComposeComponentTheme
 
 @Composable
 fun TimelineNode(
     position: TimelineNodePosition,
     circleParameters: CircleParameters,
     lineParameters: LineParameters? = null,
-    contentStartOffset: Dp,
-    spacer: Dp,
+    contentStartOffset: Dp = 16.dp,
+    spacer: Dp = 32.dp,
     content: @Composable BoxScope.(modifier: Modifier) -> Unit
 ) {
     val iconPainter = circleParameters.icon?.let { painterResource(id = it) }
@@ -50,19 +51,19 @@ fun TimelineNode(
             .drawBehind {
                 val circleRadiusInPx = circleParameters.radius.toPx()
 
-                if (position != TimelineNodePosition.LAST && lineParameters != null) {
+                lineParameters?.let {
                     drawLine(
-                        brush = lineParameters.brush,
-                        start = Offset(circleRadiusInPx, circleRadiusInPx * 2),
-                        end = Offset(circleRadiusInPx, this.size.height),
-                        strokeWidth = lineParameters.strokeWidth.toPx()
+                        brush = it.brush,
+                        start = Offset(x = circleRadiusInPx, y = circleRadiusInPx * 2),
+                        end = Offset(x = circleRadiusInPx, y = this.size.height),
+                        strokeWidth = it.strokeWidth.toPx()
                     )
                 }
 
                 drawCircle(
                     circleParameters.backgroundColor,
                     circleRadiusInPx,
-                    center = Offset(circleRadiusInPx, circleRadiusInPx)
+                    center = Offset(x = circleRadiusInPx, y = circleRadiusInPx)
                 )
 
                 circleParameters.stroke?.let { stroke ->
@@ -70,24 +71,26 @@ fun TimelineNode(
                     drawCircle(
                         color = stroke.color,
                         radius = circleRadiusInPx - strokeWidthInPx / 2,
-                        center = Offset(circleRadiusInPx, circleRadiusInPx),
+                        center = Offset(x = circleRadiusInPx, y = circleRadiusInPx),
                         style = Stroke(width = strokeWidthInPx)
                     )
                 }
 
                 iconPainter?.let { painter ->
-                    this.withTransform({
-                        translate(
-                            left = circleRadiusInPx - painter.intrinsicSize.width / 2f,
-                            top = circleRadiusInPx - painter.intrinsicSize.height / 2f
-                        )
-                    }, {
-                        this.drawIntoCanvas {
-                            with(painter) {
-                                draw(intrinsicSize)
+                    this.withTransform(
+                        transformBlock = {
+                            translate(
+                                left = circleRadiusInPx - painter.intrinsicSize.width / 2f,
+                                top = circleRadiusInPx - painter.intrinsicSize.height / 2f
+                            )
+                        },
+                        drawBlock = {
+                            this.drawIntoCanvas {
+                                with(painter) {
+                                    draw(intrinsicSize)
+                                }
                             }
-                        }
-                    })
+                        })
                 }
             }
     ) {
@@ -104,11 +107,11 @@ fun TimelineNode(
 
 @Preview(showBackground = true)
 @Composable
-fun TimelinePreview() {
+private fun TimelinePreview() {
     TimelineComposeComponentTheme {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
             TimelineNode(
@@ -119,9 +122,7 @@ fun TimelinePreview() {
                 lineParameters = LineParametersDefaults.linearGradient(
                     startColor = LightBlue,
                     endColor = Purple
-                ),
-                contentStartOffset = 16.dp,
-                spacer = 32.dp
+                )
             ) { modifier -> MessageBubble(modifier, containerColor = LightBlue) }
 
             TimelineNode(
@@ -133,8 +134,7 @@ fun TimelinePreview() {
                 lineParameters = LineParametersDefaults.linearGradient(
                     startColor = Purple,
                     endColor = Coral
-                ),
-                spacer = 32.dp
+                )
             ) { modifier -> MessageBubble(modifier, containerColor = Purple) }
 
             TimelineNode(
@@ -143,48 +143,9 @@ fun TimelinePreview() {
                     backgroundColor = LightCoral,
                     stroke = StrokeParameters(color = Coral, width = 2.dp),
                     icon = R.drawable.ic_bubble_warning_16
-                ),
-                contentStartOffset = 16.dp,
-                spacer = 32.dp
+                )
             ) { modifier -> MessageBubble(modifier, containerColor = Coral) }
         }
-    }
-}
-
-object CircleParametersDefaults {
-
-    private val defaultCircleRadius = 12.dp
-
-    fun circleParameters(
-        radius: Dp = defaultCircleRadius,
-        backgroundColor: Color = Cyan,
-        stroke: StrokeParameters? = null,
-        @DrawableRes
-        icon: Int? = null
-    ) = CircleParameters(
-        radius,
-        backgroundColor,
-        stroke,
-        icon
-    )
-}
-
-object LineParametersDefaults {
-
-    private val defaultLinearGradient = 3.dp
-
-    fun linearGradient(
-        strokeWidth: Dp = defaultLinearGradient,
-        startColor: Color,
-        endColor: Color
-    ): LineParameters {
-        val brush = Brush.verticalGradient(
-            colorStops = arrayOf(
-                0.0f to startColor,
-                1f to endColor
-            )
-        )
-        return LineParameters(strokeWidth, brush)
     }
 }
 

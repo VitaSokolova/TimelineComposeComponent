@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.domain.entities
+package vita.sokolova.example.domain.entities
 
 import java.time.LocalDate
 

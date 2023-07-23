@@ -1,4 +1,4 @@
-package vita.sokolova.timeline.ui
+package vita.sokolova.example.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,10 +14,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import vita.sokolova.timeline.ui.SampleViewModel.Companion.TEST_DATA
-import vita.sokolova.timeline.domain.entities.HiringStage
-import vita.sokolova.timeline.ui.composables.LazyTimeline
-import vita.sokolova.timeline.ui.theme.TimelineComposeComponentTheme
+import vita.sokolova.example.ui.SampleViewModel.Companion.TEST_DATA
+import vita.sokolova.example.domain.entities.HiringStage
+import vita.sokolova.example.ui.composables.LazyTimeline
+import vita.sokolova.example.ui.theme.TimelineComposeComponentTheme
 
 class SampleActivity : ComponentActivity() {
 
@@ -46,7 +46,7 @@ fun SampleScreenContent(timelineStages: Array<HiringStage>) {
 
 @Preview(showBackground = true)
 @Composable
-fun TimelineUsagePreview() {
+private fun TimelineUsagePreview() {
     TimelineComposeComponentTheme {
         Box(
             modifier = Modifier
